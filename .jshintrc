@@ -1,0 +1,21 @@
+{
+  "globals": {
+    "EventSource": true,
+    "Backbone": true
+  },
+  "strict": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "unused": true,
+  "boss": true,
+  "eqnull": true,
+  "node": true,
+  "jquery": true,
+  "maxcomplexity": 9
+}

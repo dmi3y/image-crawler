@@ -1,0 +1,31 @@
+{
+  "name": "image-crawler",
+  "version": "0.0.0",
+  "description": "Simple image crawler with server events.",
+  "main": "server.js",
+  "author": "Dmitrii Lapshukov",
+  "dependencies": {
+    "body-parser": "^1.9.0",
+    "cheerio": "^0.18.0",
+    "express": "^4.9.8",
+    "finalhandler": "^0.3.1",
+    "request": "^2.45.0",
+    "serve-static": "^1.7.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.8",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.4.1",
+    "gulp-concat-css": "^1.1.0",
+    "gulp-copy": "0.0.2",
+    "gulp-declare": "^0.3.0",
+    "gulp-htmlmin": "^0.2.0",
+    "gulp-jshint": "^1.8.5",
+    "gulp-rename": "^1.2.0",
+    "gulp-replace": "^0.4.0",
+    "gulp-watch": "^1.1.0",
+    "gulp-wrap": "^0.5.0",
+    "jshint-stylish": "^1.0.0",
+    "run-sequence": "^1.0.1"
+  }
+}
