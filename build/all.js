@@ -1619,82 +1619,105 @@
 }));
 
 $(function() {
-	'use strict';
-	var
-		Initiator,
-		Presenter,
-		presenter,
-		Data,
-		data;
+    'use strict';
+    var
+        Initiator,
+        Presenter,
+        presenter,
+        Data,
+        data;
 
-	Data = Backbone.Model.extend({
-		url: '/getimages',
-		fetch: function() {
-			var
-				source = new EventSource(this.url + '?' + this.get('website')),
-				self = this;
+    Data = Backbone.Model.extend({
+        url: '/getimages',
+        connected: false,
+        dataChunk: {},
+        data: {},
+        fetch: function() {
+            var
+                source = new EventSource(this.url + '?' + this.get('website')),
+                self = this;
 
-			this.source = source;
+            this.source = source;
 
-			source.addEventListener('message', function(e) {
+            source.addEventListener('message', function(e) {
 
-			    self.parse(e.data);
-			}, false);
+                self.parse(e.data);
+            }, false);
 
-			source.addEventListener('open', function() {
+            source.addEventListener('open', function() {
 
-	            console.log('connection opened');
-	            presenter.reset();
-			}, false);
+                console.log('connection opened');
+                self.set('connected', true);
+            }, false);
 
-			source.addEventListener('error', function(e) {
+            source.addEventListener('error', function(e) {
 
-	          source.close();
-			  if (e.readyState === EventSource.CLOSED) {
+                source.close();
+                self.set('connected', false);
+                if (e.eventPhase === EventSource.CLOSED) {
 
-	            console.log('connection closed');
-			  }
-			}, false);
-		},
-		parse: function(sdata) {
-			var
-				data;
+                    console.log('connection closed');
+                }
+            }, false);
+        },
+        parse: function(sdata) {
+            var
+                data;
 
-			data = JSON.parse(sdata);
+            data = JSON.parse(sdata);
 
-			presenter.update(data);
-		}
-	});
+            this.set('data', data);
+        }
+    });
 
-	Initiator = Backbone.View.extend({
-		el: $('#initiator'),
+    Initiator = Backbone.View.extend({
+        el: $('#initiator'),
         events: {
             'submit form#getimages': 'startCrawler'
         },
         startCrawler: function(e) {
-        	this.model.set('website', $(e.target).serialize());
-        	this.model.fetch();
-			return false;
+            this.model.set('website', $(e.target).serialize());
+            this.model.fetch();
+            this.model.on('change:connected', function(d) {
+            	if ( d.changed.connected ) {
+
+	            	presenter.reset();
+            	}
+            });
+            this.model.on('change:data', function(d) {
+            	presenter.update(d.changed.data);
+            });
+            return false;
+        },
+        disableUi: function() {
+
+            $(this.el).attr('disabled');
+        },
+        enableUi: function() {
+
+            $(this.el).removeAttr('disabled');
         }
-	});
+    });
 
-	Presenter = Backbone.View.extend({
-		el: $('#images'),
-		update: function(data) {
-			var
-				len = data.length;
+    Presenter = Backbone.View.extend({
+        el: $('#images'),
+        update: function(data) {
+            var
+                len = data.length;
 
-			for ( ;len--; ) {
-				$(this.el).append('<img src="' + data[len] + '" />');
-			}
-		},
-		reset: function() {
-			$(this.el).html('');
-		}
-	});
+            for (; len--;) {
+                $(this.el).append('<img src="' + data[len] + '" />');
+            }
+        },
+        reset: function() {
+            $(this.el).html('');
+        }
+    });
 
-	data = new Data();
-	presenter = new Presenter();
+    data = new Data();
+    presenter = new Presenter();
 
-	new Initiator({model: data});
+    new Initiator({
+        model: data
+    });
 });

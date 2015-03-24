@@ -4,6 +4,10 @@
   "description": "Simple image crawler with server events.",
   "main": "server.js",
   "author": "Dmitrii Lapshukov",
+  "scripts": {
+    "crawler": "npm run build && npm start",
+    "build": "node ./node_modules/gulp/bin/gulp.js"
+  },
   "dependencies": {
     "body-parser": "^1.9.0",
     "cheerio": "^0.18.0",
