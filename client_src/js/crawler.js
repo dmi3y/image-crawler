@@ -48,35 +48,6 @@ $(function() {
         }
     });
 
-    Initiator = Backbone.View.extend({
-        el: $('#initiator'),
-        events: {
-            'submit form#getimages': 'startCrawler'
-        },
-        startCrawler: function(e) {
-            this.model.set('website', $(e.target).serialize());
-            this.model.fetch();
-            this.model.on('change:connected', function(d) {
-            	if ( d.changed.connected ) {
-
-	            	this.presenter.reset();
-            	}
-            });
-            this.model.on('change:data', function(d) {
-            	this.presenter.update(d.changed.data);
-            });
-            return false;
-        },
-        disableUi: function() {
-
-            $(this.el).attr('disabled');
-        },
-        enableUi: function() {
-
-            $(this.el).removeAttr('disabled');
-        }
-    });
-
     Presenter = Backbone.View.extend({
         el: $('#images'),
         update: function(data) {
@@ -92,8 +63,49 @@ $(function() {
         }
     });
 
+    Initiator = Backbone.View.extend({
+        el: $('#initiator'),
+        events: {
+            'submit form#getimages': 'startCrawler'
+        },
+        initialize: function() {
+        	this.presenter = new Presenter();
+        },
+        startCrawler: function(e) {
+        	var
+        		self = this;
+
+        	this.$input = this.$el.find('#website');
+
+            this.model.set('website', $(e.target).serialize());
+            this.model.fetch();
+            this.model.on('change:connected', function(d) {
+            	if ( d.changed.connected ) {
+
+            		self.disable();
+            		self.presenter.reset();
+            	} else {
+
+            		self.enable();
+            	}
+            });
+            this.model.on('change:data', function(d) {
+            	self.presenter.update(d.changed.data);
+            });
+            return false;
+        },
+        disable: function() {
+
+            this.$input.attr('disabled', 'disabled');
+        },
+        enable: function() {
+
+            this.$input.removeAttr('disabled');
+        }
+    });
+
+
     new Initiator({
-        model: new Data(),
-	    presenter: new Presenter()
+        model: new Data()
     });
 });

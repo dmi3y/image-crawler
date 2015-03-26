@@ -55,4 +55,10 @@ gulp.task('build', function(cb) {
     );
 });
 
+gulp.task('dev', function() {
+    gulp.watch('./client_src/js/*.js', ['js']);
+    gulp.watch('./client_src/css/*.css', ['css']);
+    gulp.watch('./client_src/*.html', ['html']);
+});
+
 gulp.task('default', ['build']);
