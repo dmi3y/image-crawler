@@ -8,3 +8,8 @@
 1. Get copy.
 2. `npm install`
 3. `npm run crawler`
+
+
+#What's inside
+
+Express js plus couple of additional modules on backend, and jQuery and Backbone on frontend.

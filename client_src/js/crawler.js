@@ -3,9 +3,7 @@ $(function() {
     var
         Initiator,
         Presenter,
-        presenter,
-        Data,
-        data;
+        Data;
 
     Data = Backbone.Model.extend({
         url: '/getimages',
@@ -61,11 +59,11 @@ $(function() {
             this.model.on('change:connected', function(d) {
             	if ( d.changed.connected ) {
 
-	            	presenter.reset();
+	            	this.presenter.reset();
             	}
             });
             this.model.on('change:data', function(d) {
-            	presenter.update(d.changed.data);
+            	this.presenter.update(d.changed.data);
             });
             return false;
         },
@@ -94,10 +92,8 @@ $(function() {
         }
     });
 
-    data = new Data();
-    presenter = new Presenter();
-
     new Initiator({
-        model: data
+        model: new Data(),
+	    presenter: new Presenter()
     });
 });
